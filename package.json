@@ -9,6 +9,14 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --watch"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dimitris-Tzilopoylos/fastify-easy-pg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dimitris-Tzilopoylos/fastify-easy-pg/issues"
+  },
+  "homepage": "https://github.com/Dimitris-Tzilopoylos/fastify-easy-pg#readme",
   "keywords": [
     "fastify",
     "postgres",
