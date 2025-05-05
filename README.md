@@ -26,34 +26,37 @@ import Fastify from "fastify";
 import { fastifyEasyPG } from "@fastify/easy-pg";
 
 const app = Fastify();
+const bootstrap = async () => {
+  await app.register(fastifyEasyPG, {
+    host: "localhost",
+    port: 5432,
+    database: "postgres",
+    user: "postgres",
+    password: "postgres",
+    relations: [
+      {
+        alias: "author",
+        from_schema: "public",
+        to_schema: "public",
+        from_table: "posts",
+        from_column: "author_id",
+        to_table: "users",
+        to_column: "id",
+        type: "object", // or array ,
+      },
+    ],
+  });
 
-app.register(fastifyEasyPG, {
-  host: "localhost",
-  port: 5432,
-  database: "postgres",
-  user: "postgres",
-  password: "postgres",
-  relations: [
-    {
-      alias: "author",
-      from_schema: "public",
-      to_schema: "public",
-      from_table: "posts",
-      from_column: "author_id",
-      to_table: "users",
-      to_column: "id",
-      type: "object", // or array ,
-    },
-  ],
-});
+  app.get("/users", async (req, reply) => {
+    const model = app.easyPG.model({ table: "users", schema: "public" });
+    const users = await model.find({});
+    reply.send(users);
+  });
 
-app.get("/users", async (req, reply) => {
-  const model = app.easyPG.model({ table: "users", schema: "public" });
-  const users = await model.find({});
-  reply.send(users);
-});
+  app.listen({ port: 3000 });
+};
 
-app.listen({ port: 3000 });
+bootstrap();
 ```
 
 ---
