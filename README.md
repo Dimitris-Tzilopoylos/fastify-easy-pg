@@ -1,4 +1,4 @@
-# @fastify/easy-pg
+# fastify-easy-pg
 
 A Fastify plugin for simplified PostgreSQL model access using [`test-easy-psql`](https://www.npmjs.com/package/test-easy-psql). It automaticaly scans your PostgreSQL tables per schema and registers their models as classes in memory. Please see how the underlying model functions work, by visiting the docs of [`test-easy-psql`](https://www.npmjs.com/package/test-easy-psql).
 
@@ -14,7 +14,7 @@ A Fastify plugin for simplified PostgreSQL model access using [`test-easy-psql`]
 ## Installation
 
 ```bash
-npm install @fastify/easy-pg
+npm install fastify-easy-pg
 ```
 
 ---
