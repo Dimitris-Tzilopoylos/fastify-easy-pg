@@ -1,5 +1,5 @@
 {
-  "name": "@fastify/easy-pg",
+  "name": "fastify-easy-pg",
   "version": "0.0.1",
   "description": "Fastify plugin wrapper around test-easy-psql",
   "main": "dist/index.js",
@@ -8,13 +8,6 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Dimitris-Tzilopoylos/fastify-easy-pg.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Dimitris-Tzilopoylos/fastify-easy-pg/issues"
   },
   "homepage": "https://github.com/Dimitris-Tzilopoylos/fastify-easy-pg#readme",
   "keywords": [
