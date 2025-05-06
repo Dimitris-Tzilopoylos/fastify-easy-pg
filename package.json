@@ -18,10 +18,10 @@
   "author": "Dimitrios Tzilopoylos",
   "license": "ISC",
   "dependencies": {
-    "easy-pg-scanner": "^1.0.4",
+    "easy-pg-scanner": "^1.0.5",
     "fastify": "^5.3.2",
     "fastify-plugin": "^5.0.1",
-    "test-easy-psql": "^0.0.37"
+    "test-easy-psql": "^0.0.38"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
