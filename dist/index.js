@@ -35,11 +35,11 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 var import_fastify_plugin = require("fastify-plugin");
-var import_test_easy_psql2 = require("test-easy-psql");
+var import_easy_psql2 = require("easy-psql");
 
 // src/helpers.ts
 var import_easy_pg_scanner = __toESM(require("easy-pg-scanner"));
-var import_test_easy_psql = require("test-easy-psql");
+var import_easy_psql = require("easy-psql");
 var loadDBSchemas = async (config) => {
   const schemas = await (0, import_easy_pg_scanner.default)(config);
   return schemas.map((schema) => {
@@ -60,8 +60,8 @@ var loadDBSchemas = async (config) => {
 var loadModels = async (config) => {
   try {
     const dbSchemas = await loadDBSchemas(config);
-    import_test_easy_psql.DB.modelFactory = {};
-    import_test_easy_psql.DB.models = {};
+    import_easy_psql.DB.modelFactory = {};
+    import_easy_psql.DB.models = {};
     for (const { schema, tables = [] } of dbSchemas) {
       if (!tables?.length) {
         continue;
@@ -75,7 +75,7 @@ var loadModels = async (config) => {
           )
         });
         if (model) {
-          import_test_easy_psql.DB.register(model);
+          import_easy_psql.DB.register(model);
         }
       }
     }
@@ -92,17 +92,17 @@ var buildModelClass = ({
     return null;
   }
   const modelColumns = (table.columns || []).reduce((acc, col) => {
-    acc[col.name] = new import_test_easy_psql.Column(col);
+    acc[col.name] = new import_easy_psql.Column(col);
     return acc;
   }, {});
   const modelRelations = (relations || []).reduce((acc, rel) => {
-    acc[rel.alias] = new import_test_easy_psql.Relation({
+    acc[rel.alias] = new import_easy_psql.Relation({
       ...rel,
       schema: rel.to_schema || "public"
     });
     return acc;
   }, {});
-  return class extends import_test_easy_psql.Model {
+  return class extends import_easy_psql.Model {
     constructor(conn) {
       super(table.table, conn, schema);
       this.columns = modelColumns;
@@ -131,20 +131,20 @@ var plugin = async (fastify, opts) => {
   }
   try {
     await loadModels(options);
-    import_test_easy_psql2.DB.registerConnectionConfig({
+    import_easy_psql2.DB.registerConnectionConfig({
       ...options,
       min: options.min_pool_size,
       max: options.max_pool_size
     });
-    import_test_easy_psql2.DB.enableLog = !!options.logSQL;
+    import_easy_psql2.DB.enableLog = !!options.logSQL;
     fastify.decorate("easyPG", {
-      pool: import_test_easy_psql2.DB.pool,
-      db: import_test_easy_psql2.DB,
-      dbManager: import_test_easy_psql2.DBManager,
-      rawSQLPart: (cb) => new import_test_easy_psql2.SQL(cb),
+      pool: import_easy_psql2.DB.pool,
+      db: import_easy_psql2.DB,
+      dbManager: import_easy_psql2.DBManager,
+      rawSQLPart: (cb) => new import_easy_psql2.SQL(cb),
       reloadModels: async () => await loadModels(options),
       model: (modelOpts) => {
-        const model = import_test_easy_psql2.DB.modelFactory?.[modelOpts?.schema || "public"]?.[modelOpts?.table];
+        const model = import_easy_psql2.DB.modelFactory?.[modelOpts?.schema || "public"]?.[modelOpts?.table];
         if (!model) {
           throw new Error(
             `Model ${modelOpts.schema || "public"}.${modelOpts.table} is not registered`

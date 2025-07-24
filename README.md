@@ -1,6 +1,6 @@
 # fastify-easy-pg
 
-A Fastify plugin for simplified PostgreSQL model access using [`test-easy-psql`](https://www.npmjs.com/package/test-easy-psql). It automaticaly scans your PostgreSQL tables per schema and registers their models as classes in memory. Please see how the underlying model functions work, by visiting the docs of [`test-easy-psql`](https://www.npmjs.com/package/test-easy-psql).
+A Fastify plugin for simplified PostgreSQL model access using [`easy-psql`](https://www.npmjs.com/package/easy-psql). It automaticaly scans your PostgreSQL tables per schema and registers their models as classes in memory. Please see how the underlying model functions work, by visiting the docs of [`easy-psql`](https://www.npmjs.com/package/easy-psql).
 
 ## Features
 
@@ -103,7 +103,7 @@ await model.find({ include: { comments: true } }); // use the alias
 Once registered, `fastify.easyPG` provides:
 
 - `model({ table, schema?, connection? })`: Get a model instance
-- `db`: Access the underlying `DB` class from `test-easy-psql`
+- `db`: Access the underlying `DB` class from `easy-psql`
 - `dbManager`: Access the DB manager
 - `rawSQLPart(cb)`: Create reusable raw SQL parts for more flexibility
 - `reloadModels()`: Reload the models (useful in development)

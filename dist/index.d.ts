@@ -1,5 +1,5 @@
 import { FastifyPluginAsync } from 'fastify';
-import { DB, Model, DBManager, SQL } from 'test-easy-psql';
+import { DB, Model, DBManager, SQL } from 'easy-psql';
 
 type RelationConfig = {
     alias: string;

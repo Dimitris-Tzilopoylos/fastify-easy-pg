@@ -6,7 +6,7 @@ import {
   ModelFnInput,
   RawSQLPartSignature,
 } from "./types";
-import { DB, DBManager, Model, SQL } from "test-easy-psql";
+import { DB, DBManager, Model, SQL } from "easy-psql";
 import { loadModels } from "./helpers";
 
 declare module "fastify" {
@@ -60,8 +60,9 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
       rawSQLPart: (cb: RawSQLPartSignature) => new SQL(cb),
       reloadModels: async () => await loadModels(options),
       model: (modelOpts: ModelFnInput) => {
-        const model =
-          DB.modelFactory?.[modelOpts?.schema || "public"]?.[modelOpts?.table];
+        const model = DB.modelFactory?.[modelOpts?.schema || "public"]?.[
+          modelOpts?.table
+        ] as typeof Model;
         if (!model) {
           throw new Error(
             `Model ${modelOpts.schema || "public"}.${
@@ -71,6 +72,7 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
         }
 
         const instance = new model(modelOpts.connection);
+
         return instance;
       },
     });

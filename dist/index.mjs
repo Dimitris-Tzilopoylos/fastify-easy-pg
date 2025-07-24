@@ -1,10 +1,10 @@
 // src/index.ts
 import { fastifyPlugin } from "fastify-plugin";
-import { DB as DB2, DBManager, SQL } from "test-easy-psql";
+import { DB as DB2, DBManager, SQL } from "easy-psql";
 
 // src/helpers.ts
 import getPGSchemas from "easy-pg-scanner";
-import { Column, DB, Model, Relation } from "test-easy-psql";
+import { Column, DB, Model, Relation } from "easy-psql";
 var loadDBSchemas = async (config) => {
   const schemas = await getPGSchemas(config);
   return schemas.map((schema) => {

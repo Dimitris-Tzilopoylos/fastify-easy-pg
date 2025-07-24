@@ -1,6 +1,6 @@
 import getPGSchemas from "easy-pg-scanner";
 import { FastifyEasyPGPluginOptions, RelationConfig } from "./types";
-import { Column, DB, Model, Relation } from "test-easy-psql";
+import { Column, DB, Model, Relation } from "easy-psql";
 
 export const loadDBSchemas = async (config: FastifyEasyPGPluginOptions) => {
   const schemas = await getPGSchemas(config);
