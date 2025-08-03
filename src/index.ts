@@ -82,7 +82,6 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
   }
 };
 
-// Use a more specific export type that aligns with what fastify expects
 const fastifyEasyPG = fastifyPlugin(plugin, {
   name: "@fastify/easy-pg",
   fastify: "5.x",
