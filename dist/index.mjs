@@ -1,6 +1,6 @@
 // src/index.ts
 import { fastifyPlugin } from "fastify-plugin";
-import { DB as DB2, DBManager, SQL } from "easy-psql";
+import { Column as Column2, DB as DB2, DBManager, Model as Model2, Relation as Relation2, SQL } from "easy-psql";
 
 // src/helpers.ts
 import getPGSchemas from "easy-pg-scanner";
@@ -103,11 +103,44 @@ var plugin = async (fastify, opts) => {
     });
     DB2.enableLog = !!options.logSQL;
     fastify.decorate("easyPG", {
+      newModel: (config) => {
+        const columns = (config.columns || []).reduce(
+          (col, acc) => ({ ...acc, [col.name]: new Column2(col) }),
+          {}
+        );
+        const relations = (config.relations || []).reduce(
+          (acc, rel) => ({
+            ...acc,
+            [rel.alias]: new Relation2({
+              alias: rel.alias,
+              from_table: rel.from_table || config.table,
+              to_table: rel.to_table,
+              from_column: rel.from_column,
+              to_column: rel.to_column,
+              type: rel.type,
+              schema: rel.to_schema || ""
+            })
+          }),
+          {}
+        );
+        return class extends Model2 {
+          constructor(conn) {
+            super(config.table, conn, config.schema);
+            this.columns = columns;
+            this.relations = relations;
+          }
+        };
+      },
+      column: (config) => new Column2(config),
+      relation: (config) => new Relation2({ ...config, schema: config.to_schema || "" }),
       pool: DB2.pool,
       db: DB2,
       dbManager: DBManager,
       rawSQLPart: (cb) => new SQL(cb),
-      reloadModels: async () => await loadModels(options),
+      reloadModels: async (relations) => await loadModels({
+        ...options,
+        relations: (typeof relations === "undefined" ? options.relations : relations) || []
+      }),
       model: (modelOpts) => {
         const model = DB2.modelFactory?.[modelOpts?.schema || "public"]?.[modelOpts?.table];
         if (!model) {

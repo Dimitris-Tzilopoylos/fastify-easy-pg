@@ -138,11 +138,44 @@ var plugin = async (fastify, opts) => {
     });
     import_easy_psql2.DB.enableLog = !!options.logSQL;
     fastify.decorate("easyPG", {
+      newModel: (config) => {
+        const columns = (config.columns || []).reduce(
+          (col, acc) => ({ ...acc, [col.name]: new import_easy_psql2.Column(col) }),
+          {}
+        );
+        const relations = (config.relations || []).reduce(
+          (acc, rel) => ({
+            ...acc,
+            [rel.alias]: new import_easy_psql2.Relation({
+              alias: rel.alias,
+              from_table: rel.from_table || config.table,
+              to_table: rel.to_table,
+              from_column: rel.from_column,
+              to_column: rel.to_column,
+              type: rel.type,
+              schema: rel.to_schema || ""
+            })
+          }),
+          {}
+        );
+        return class extends import_easy_psql2.Model {
+          constructor(conn) {
+            super(config.table, conn, config.schema);
+            this.columns = columns;
+            this.relations = relations;
+          }
+        };
+      },
+      column: (config) => new import_easy_psql2.Column(config),
+      relation: (config) => new import_easy_psql2.Relation({ ...config, schema: config.to_schema || "" }),
       pool: import_easy_psql2.DB.pool,
       db: import_easy_psql2.DB,
       dbManager: import_easy_psql2.DBManager,
       rawSQLPart: (cb) => new import_easy_psql2.SQL(cb),
-      reloadModels: async () => await loadModels(options),
+      reloadModels: async (relations) => await loadModels({
+        ...options,
+        relations: (typeof relations === "undefined" ? options.relations : relations) || []
+      }),
       model: (modelOpts) => {
         const model = import_easy_psql2.DB.modelFactory?.[modelOpts?.schema || "public"]?.[modelOpts?.table];
         if (!model) {
