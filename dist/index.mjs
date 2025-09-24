@@ -105,7 +105,10 @@ var plugin = async (fastify, opts) => {
     fastify.decorate("easyPG", {
       newModel: (config) => {
         const columns = (config.columns || []).reduce(
-          (col, acc) => ({ ...acc, [col.name]: new Column2(col) }),
+          (acc, col) => ({
+            ...acc,
+            [col.name]: new Column2(col)
+          }),
           {}
         );
         const relations = (config.relations || []).reduce(

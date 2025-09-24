@@ -140,7 +140,10 @@ var plugin = async (fastify, opts) => {
     fastify.decorate("easyPG", {
       newModel: (config) => {
         const columns = (config.columns || []).reduce(
-          (col, acc) => ({ ...acc, [col.name]: new import_easy_psql2.Column(col) }),
+          (acc, col) => ({
+            ...acc,
+            [col.name]: new import_easy_psql2.Column(col)
+          }),
           {}
         );
         const relations = (config.relations || []).reduce(

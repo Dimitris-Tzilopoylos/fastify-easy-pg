@@ -1,6 +1,6 @@
 {
   "name": "fastify-easy-pg",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Fastify plugin wrapper around easy-psql",
   "main": "dist/index.js",
   "module": "dist/index.js",

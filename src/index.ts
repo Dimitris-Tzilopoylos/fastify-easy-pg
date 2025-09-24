@@ -72,7 +72,10 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
         connection?: any;
       }) => {
         const columns: Record<string, Column> = (config.columns || []).reduce(
-          (col: any, acc: any) => ({ ...acc, [col.name]: new Column(col) }),
+          (acc: Record<string, Column>, col: any) => ({
+            ...acc,
+            [col.name]: new Column(col),
+          }),
           {} as Record<string, Column>
         );
 
