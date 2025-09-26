@@ -33,6 +33,7 @@ type RawSQLPartSignature = (args?: any) => [sql: string, args: any[]] | string;
 declare module "fastify" {
     interface FastifyInstance {
         easyPG: {
+            loadDBStructure: (options: FastifyEasyPGPluginOptions) => Promise<any[]>;
             pool: typeof DB.pool;
             column: (config: any) => Column;
             relation: (config: RelationConfig) => Relation;

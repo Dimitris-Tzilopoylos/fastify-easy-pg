@@ -138,6 +138,9 @@ var plugin = async (fastify, opts) => {
     });
     import_easy_psql2.DB.enableLog = !!options.logSQL;
     fastify.decorate("easyPG", {
+      loadDBStructure: async (options2) => {
+        return await loadDBSchemas(options2);
+      },
       newModel: (config) => {
         const columns = (config.columns || []).reduce(
           (acc, col) => ({

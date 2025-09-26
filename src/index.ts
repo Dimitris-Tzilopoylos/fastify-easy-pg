@@ -8,11 +8,12 @@ import {
   RelationConfig,
 } from "./types";
 import { Column, DB, DBManager, Model, Relation, SQL } from "easy-psql";
-import { loadModels } from "./helpers";
+import { loadDBSchemas, loadModels } from "./helpers";
 
 declare module "fastify" {
   interface FastifyInstance {
     easyPG: {
+      loadDBStructure: (options: FastifyEasyPGPluginOptions) => Promise<any[]>;
       pool: typeof DB.pool;
       column: (config: any) => Column;
       relation: (config: RelationConfig) => Relation;
@@ -64,6 +65,9 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
     DB.enableLog = !!options.logSQL;
 
     fastify.decorate("easyPG", {
+      loadDBStructure: async (options: FastifyEasyPGPluginOptions) => {
+        return await loadDBSchemas(options);
+      },
       newModel: (config: {
         table: string;
         schema: string;
