@@ -9,6 +9,7 @@ import {
 } from "./types";
 import { Column, DB, DBManager, Model, Relation, SQL } from "easy-psql";
 import { loadDBSchemas, loadModels } from "./helpers";
+import { EasyPSQLRBAC } from "easy-psql-rbac";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -27,6 +28,7 @@ declare module "fastify" {
       model(opts: ModelFnInput): Model;
       db: typeof DB;
       dbManager: typeof DBManager;
+      rbac: EasyPSQLRBAC;
       rawSQLPart: (cb: RawSQLPartSignature) => SQL;
       reloadModels: (relations?: RelationConfig[]) => Promise<void>;
     };
@@ -35,7 +37,7 @@ declare module "fastify" {
 
 const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
   fastify,
-  opts
+  opts,
 ) => {
   const options = opts || {};
   if (!options.port) {
@@ -65,6 +67,7 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
     DB.enableLog = !!options.logSQL;
 
     fastify.decorate("easyPG", {
+      rbac: new EasyPSQLRBAC({ userIdentityKey: options.userIdentityKey }),
       loadDBStructure: async (options: FastifyEasyPGPluginOptions) => {
         return await loadDBSchemas(options);
       },
@@ -80,7 +83,7 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
             ...acc,
             [col.name]: new Column(col),
           }),
-          {} as Record<string, Column>
+          {} as Record<string, Column>,
         );
 
         const relations: Record<string, Relation> = (
@@ -98,7 +101,7 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
               schema: rel.to_schema || "",
             }),
           }),
-          {} as Record<string, Relation>
+          {} as Record<string, Relation>,
         );
         return class extends Model {
           constructor(conn?: any) {
@@ -131,7 +134,7 @@ const plugin: FastifyPluginAsync<FastifyEasyPGPluginOptions> = async (
           throw new Error(
             `Model ${modelOpts.schema || "public"}.${
               modelOpts.table
-            } is not registered`
+            } is not registered`,
           );
         }
 

@@ -20,6 +20,7 @@ export interface FastifyEasyPGPluginOptions {
   password?: string;
   relations?: RelationConfig[];
   logSQL?: boolean;
+  userIdentityKey?: string;
 }
 
 export type ModelFnInput = {
@@ -29,5 +30,5 @@ export type ModelFnInput = {
 };
 
 export type RawSQLPartSignature = (
-  args?: any
+  args?: any,
 ) => [sql: string, args: any[]] | string;

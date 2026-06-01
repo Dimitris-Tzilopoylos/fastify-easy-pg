@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 import { DB, Column, Relation, Model, DBManager, SQL } from 'easy-psql';
+import { EasyPSQLRBAC } from 'easy-psql-rbac';
 
 type RelationConfig = {
     alias: string;
@@ -22,6 +23,7 @@ interface FastifyEasyPGPluginOptions {
     password?: string;
     relations?: RelationConfig[];
     logSQL?: boolean;
+    userIdentityKey?: string;
 }
 type ModelFnInput = {
     table: string;
@@ -47,6 +49,7 @@ declare module "fastify" {
             model(opts: ModelFnInput): Model;
             db: typeof DB;
             dbManager: typeof DBManager;
+            rbac: EasyPSQLRBAC;
             rawSQLPart: (cb: RawSQLPartSignature) => SQL;
             reloadModels: (relations?: RelationConfig[]) => Promise<void>;
         };

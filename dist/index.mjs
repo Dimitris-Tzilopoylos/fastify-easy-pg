@@ -77,6 +77,7 @@ var buildModelClass = ({
 };
 
 // src/index.ts
+import { EasyPSQLRBAC } from "easy-psql-rbac";
 var plugin = async (fastify, opts) => {
   const options = opts || {};
   if (!options.port) {
@@ -103,6 +104,7 @@ var plugin = async (fastify, opts) => {
     });
     DB2.enableLog = !!options.logSQL;
     fastify.decorate("easyPG", {
+      rbac: new EasyPSQLRBAC({ userIdentityKey: options.userIdentityKey }),
       loadDBStructure: async (options2) => {
         return await loadDBSchemas(options2);
       },
